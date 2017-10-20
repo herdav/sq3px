@@ -31,7 +31,7 @@ boolean fan_max;
 Signifier[] signifier;
 PVector[] point = new PVector[weighting_sensor.length];
 int count = 0;
-float wide;
+int wide;
 
 void setup() {
   /* actors and sensors setup */
@@ -47,7 +47,7 @@ void setup() {
 
   /* graphic setup */  
   //fullScreen();
-  size(1280, 720);
+  size(1280, 800);
   smooth(8);
   graphic_setup();
   delay(1000);
@@ -75,7 +75,7 @@ void sensors() {
   weighting_sensor[7] = int(0.5*weighting_sensor[6] + 0.5*weighting_sensor[8]);
   weighting_sensor[4] = int(0.25*weighting_sensor[1] + 0.25*weighting_sensor[3] + 0.25*weighting_sensor[5] + 0.25*weighting_sensor[7]);
 
-  for (int i = 0; i < servo_val.length; i++) {
+  for (int i = 0; i < weighting_sensor.length; i++) {
     servo_val[i] = int(map(weighting_sensor[i], 0, 255, servo_min, servo_max));    
     weighting_sensor_store[i][count] = int(map(weighting_sensor[i], 0, 255, -height/7, height/7));    
     if (count < sensor_store-1) {
@@ -83,6 +83,10 @@ void sensors() {
     } else {
       weighting_sensor_store[i][count] = weighting_sensor_store[i][sensor_store-1];
     }
+  }
+  count++;
+  if (count == sensor_store) {
+    count = 0;
   }
 }
 
@@ -112,12 +116,11 @@ void servos() {
 void fan() {
   arduino.analogWrite(fan_pin, 255);
 }
-
 void graphic_setup() {
   rectMode(CENTER);
   wide = height / 3;
-  float x0 = (width - 3*wide)/2 + wide/2;
-  float y0 = wide/2;
+  int x0 = (width - 3*wide)/2 + wide/2;
+  int y0 = wide/2;
   signifier = new Signifier[weighting_sensor.length];
 
   for (int i = 0; i < signifier.length; i++) {
@@ -134,7 +137,7 @@ void graphic_setup() {
 }
 
 void graphic() {
-  float dX, dY, k, x, y, l;
+  int dX, dY, k, x, y, l;
   x = wide;
   y = x;
   dX = (width - 3*x)/2;
@@ -151,14 +154,16 @@ void graphic() {
   point[3] = new PVector(0.75*x + weighting_sensor[3] + dX - k, 1.5*y + weighting_sensor[0] - weighting_sensor[6] + dY);
   point[5] = new PVector(2.25*x - weighting_sensor[5] + dX + k, 1.5*y - weighting_sensor[8] + weighting_sensor[2] + dY);
   point[4] = new PVector(1.5*x + dX, 1.5*y + dY);
+
   for (int i = 0; i < signifier.length; i++) {
     signifier[i].display_rect(int(weighting_sensor[i]));
   }
+
   for (int j = 0; j < signifier.length; j++) {
     noFill();  
     stroke(255-weighting_sensor[j]);
     strokeWeight(1);
-    for (int n = 0; n < 9; n++) {
+    for (int n = 0; n < 3; n++) {
       int d = 2;
       beginShape();
       for (int i = 0; i < sensor_store; i++) {
@@ -167,18 +172,14 @@ void graphic() {
       endShape();
     }
   }
-  count++;
-  if (count == sensor_store) {
-    count = 0;
-  }
 }
 
 class Signifier {
-  float diameter;
+  int diameter;
   int val, val_eff;
   PVector pos = new PVector();
 
-  Signifier(float tempDiameter, float tempX, float tempY) {
+  Signifier(int tempDiameter, float tempX, float tempY) {
     pos.x = tempX;
     pos.y = tempY;
     diameter = tempDiameter;
