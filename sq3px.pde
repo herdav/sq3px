@@ -15,18 +15,20 @@ int[] servo_val = new int[servo_num];
 int servo_max = 160;
 int servo_min = 20;
 
-int senser_num = 4;
-int[] sensor = new int[senser_num];
-int[] sensor_proportional = new int[senser_num];
-int[] sensor_integral = new int[senser_num];
-int[] sensor_differential_A = new int[senser_num];
-int[] sensor_differential_B = new int[senser_num];
-int[] sensor_differential = new int[senser_num];
-int[] sensor_PI_difference = new int[senser_num];
-int[] sensor_PID_difference = new int[senser_num];
-int[] sensor_val = new int[senser_num];
+int sensor_num = 4;
+int[] sensor = new int[sensor_num];
+
+int[] sensor_proportional = new int[sensor_num];
+int[] sensor_integral = new int[sensor_num];
+int[] sensor_differential_A = new int[sensor_num];
+int[] sensor_differential_B = new int[sensor_num];
+int[] sensor_differential = new int[sensor_num];
+int[] sensor_PI_difference = new int[sensor_num];
+int[] sensor_PID_difference = new int[sensor_num];
+
+int[] sensor_val = new int[sensor_num];
 int sensor_store_lenght = 100;
-int [][] sensor_val_store = new int[sensor.length][sensor_store_lenght];
+int[][] sensor_val_store = new int[sensor.length][sensor_store_lenght];
 int count_sensor_val = 0;
 int[] weighting_sensor = new int[servo_num];
 int weighting_store_lenght = 5;
@@ -40,7 +42,7 @@ boolean fan_max;
 Signifier[] signifier;
 PVector[] point = new PVector[weighting_sensor.length];
 PFont cour;
-int lines = 2;
+int lines = 3;
 int weight = 5;
 int wide;
 int cycle;
@@ -48,7 +50,7 @@ int time_start, time_stop;
 
 void setup() {
   /* actors and sensors setup */
-  arduino = new Arduino(this, Arduino.list()[0], 57600);
+  arduino = new Arduino(this, "COM4", 57600);
   for (int i = 0; i < sensor.length; i++) {  
     sensor[i] = i + sensor.length;
   }
@@ -91,11 +93,11 @@ void sensors() {
   }
   for (int i = 0; i < sensor_val.length; i++) {
     sensor_differential_A[i] = sensor_integral[i];
-    sensor_differential[i] = (sensor_differential_A[i] - sensor_differential_B[i]);
+    sensor_differential[i] = (sensor_differential_A[i] - sensor_differential_B[i])*2;
     sensor_differential_B[i] = sensor_integral[i];
-    sensor_PID_difference[i] = sensor_proportional[i] - sensor_PI_difference[i] - sensor_differential[i];
+    sensor_PID_difference[i] = sensor_proportional[i] - sensor_PI_difference[i] - int(sensor_differential[i]);
   }
-
+  
   for (int i = 0; i < sensor_val.length; i++) {
     sensor_val[i] = int(map(sensor_integral[i]+sensor_differential[i], 0, 1023, 0, 255));
   }
@@ -173,7 +175,6 @@ void graphic_setup() {
 }
 
 void graphic() {
-  cour = createFont("courbd.ttf", 14);
   int dX, dY, k, x, y, l;
   x = wide;
   y = x;
@@ -217,7 +218,6 @@ void data() {
   time_start = millis();
   cycle = time_start - time_stop;
   time_stop = millis();
-  textFont(cour);
   fill(0, 255, 255);
   textAlign(LEFT);
   text("P: ", rand, 50);
