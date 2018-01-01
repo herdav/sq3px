@@ -17,12 +17,16 @@ int servo_min = 20;
 
 int senser_num = 4;
 int[] sensor = new int[senser_num];
-int[] sensor_read = new int[senser_num];
+int[] sensor_proportional = new int[senser_num];
+int[] sensor_integral = new int[senser_num];
+int[] sensor_differential_A = new int[senser_num];
+int[] sensor_differential_B = new int[senser_num];
+int[] sensor_differential = new int[senser_num];
+int[] sensor_PI_difference = new int[senser_num];
+int[] sensor_PID_difference = new int[senser_num];
+int[] sensor_val = new int[senser_num];
 int sensor_store_lenght = 100;
 int [][] sensor_val_store = new int[sensor.length][sensor_store_lenght];
-int[] sensor_val = new int[senser_num];
-int[] sensor_average = new int[senser_num];
-int[] sensor_delay = new int[senser_num];
 int count_sensor_val = 0;
 int[] weighting_sensor = new int[servo_num];
 int weighting_store_lenght = 5;
@@ -73,20 +77,27 @@ void draw() {
 
 void sensors() {
   for (int i = 0; i < sensor.length; i++) {
-    sensor_read[i] = arduino.analogRead(sensor[i]);
-    sensor_val_store[i][count_sensor_val] = sensor_read[i];
+    sensor_proportional[i] = arduino.analogRead(sensor[i]);
+    sensor_val_store[i][count_sensor_val] = sensor_proportional[i];
     for (int j = 0; j < sensor_store_lenght; j++) {
-      sensor_average[i] += sensor_val_store[i][j];
+      sensor_integral[i] += sensor_val_store[i][j];
     }
-    sensor_average[i] = (sensor_average[i] / sensor_store_lenght);
-    sensor_delay[i] = sensor_read[i] - sensor_average[i];
+    sensor_integral[i] = (sensor_integral[i] / (sensor_store_lenght+1));
+    sensor_PI_difference[i] = sensor_proportional[i] - sensor_integral[i];
   } 
   count_sensor_val++;
   if (count_sensor_val == sensor_store_lenght) {
     count_sensor_val = 0;
   }
   for (int i = 0; i < sensor_val.length; i++) {
-    sensor_val[i] = int(map(sensor_average[i], 0, 1023, 0, 255));
+    sensor_differential_A[i] = sensor_integral[i];
+    sensor_differential[i] = (sensor_differential_A[i] - sensor_differential_B[i]);
+    sensor_differential_B[i] = sensor_integral[i];
+    sensor_PID_difference[i] = sensor_proportional[i] - sensor_PI_difference[i] - sensor_differential[i];
+  }
+
+  for (int i = 0; i < sensor_val.length; i++) {
+    sensor_val[i] = int(map(sensor_integral[i]+sensor_differential[i], 0, 1023, 0, 255));
   }
 
   weighting_sensor[0] = int((0.5*sensor_val[0] + 0.2*sensor_val[2] + 0.2*sensor_val[1] + 0.1*sensor_val[3]));  
@@ -201,27 +212,35 @@ void graphic() {
 }
 
 void data() {
+  int gap = 45;
+  int rand = 10;
   time_start = millis();
   cycle = time_start - time_stop;
   time_stop = millis();
   textFont(cour);
+  fill(0, 255, 255);
+  textAlign(LEFT);
+  text("P: ", rand, 50);
+  text("I: ", rand, 75);
+  text("D: ", rand, 100);
   textAlign(RIGHT);
-  fill(0, 255, 0);
   for (int i = 0; i < sensor.length; i++) {
-    text(sensor_read[i], wide - (i+1)*50 - 10, 50);
-    text(sensor_delay[i], wide - (i+1)*50 - 10, 75);
-    text(sensor_average[i], wide - (i+1)*50 - 10, 100);
+    text(sensor_proportional[i], wide -(i+1)*gap - rand, 50);
+    text(sensor_PI_difference[i], wide-(i+1)*gap - rand, 75);
+    text(sensor_differential[i], wide-(i+1)*gap - rand, 100);
+    text(sensor_PID_difference[i], wide-(i+1)*gap - rand, 125);
+    text(sensor_PID_difference[i]-sensor_proportional[i], wide-(i+1)*gap - rand, 150);
   }
   for (int i = 0; i < 3; i++) {
-    text(weighting_sensor[i], wide - (i+1)*50 - 10, 150);
+    text(weighting_sensor[i], wide-(i+1)*gap-rand, 200);
   }
   for (int i = 0; i < 3; i++) {
-    text(weighting_sensor[i+3], wide - (i+1)*50 - 10, 175);
+    text(weighting_sensor[i+3], wide-(i+1)*gap-rand, 225);
   }
   for (int i = 0; i < 3; i++) {
-    text(weighting_sensor[i+6], wide - (i+1)*50 - 10, 200);
+    text(weighting_sensor[i+6], wide-(i+1)*gap-rand, 250);
   }
-  text(cycle + "ms/cy", wide - 60, 250);
+  text(cycle + "ms/cycle", wide - 60, 300);
 }
 
 class Signifier {
