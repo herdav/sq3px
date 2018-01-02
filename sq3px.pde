@@ -76,8 +76,8 @@ void draw() {
   sensors();
   servos();
   fan();
-  graphic();
-  //data();
+  //graphic();
+  data();
   println();
 }
 
@@ -94,9 +94,6 @@ void sensors() {
   count_sensor_proportional++;
   if (count_sensor_proportional == sensor_store_lenght) {
     count_sensor_proportional = 0;
-  }
-  for (int i = 0; i < sensor_valid.length; i++) {
-    sensor_differential[i] = sensor_integral_A[i] / sensor_proportional[i];
   }
   sensor_differential_gain = 0.5;
   for (int i = 0; i < sensor_valid.length; i++) {   
@@ -244,7 +241,7 @@ void data() {
   time_start = millis();
   cycle = time_start - time_stop;
   time_stop = millis();
-  fill(0, 255, 255);
+  fill(255);
   textAlign(LEFT);
   text("P: ", rand, 50);
   text("I: ", rand, 75);
@@ -255,6 +252,7 @@ void data() {
     text(int(sensor_integral_A[i]), wide - (i+1)*gap - rand, 75);
     text(sensor_differential[i], wide - (i+1)*gap - rand, 100);
     text(int(sensor_output[i]), wide - (i+1)*gap - rand, 125);
+    text(int(sensor_proportional[i]-sensor_output[i]), wide - (i+1)*gap - rand, 150);
   }
   for (int i = 0; i < 3; i++) {
     text(weighting_sensor[i], wide - (i+1)*gap - rand, 200);
@@ -288,7 +286,7 @@ void data() {
   }
   endShape();
   beginShape();
-  stroke(0, 255, 255);
+  stroke(255);
   for (int i = 0; i < output_A.length; i++) {
     curveVertex(50 + i*2, height/2 + output_B[i]);
   }
