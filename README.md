@@ -7,3 +7,12 @@ The installation is continuous in a slight movement – like blades of grass in 
 ![capture](https://github.com/herdav/sq3px/blob/master/sq3px@lab30.jpg)
 
 Show [Video](https://vimeo.com/221154829) @ Vimeo.
+
+---
+
+
+### graphic
+![capture](https://github.com/herdav/sq3px/blob/master/sq3px_graphic.jpg) 
+
+### visualized control system
+![capture](https://github.com/herdav/sq3px/blob/master/sq3px_data.jpg)
