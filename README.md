@@ -6,12 +6,9 @@ Four sensors are attached to a stand at various positions, which measure the amb
 
 The installation is continuous in a slight movement – like blades of grass in the wind.
 
-![capture](https://github.com/herdav/sq3px/blob/master/sq3px@lab30.jpg)
-
 Show [Video](https://vimeo.com/221154829) @ Vimeo.
 
----
-
+![capture](https://github.com/herdav/sq3px/blob/master/sq3px@lab30.jpg)
 
 ### Graphic
 
