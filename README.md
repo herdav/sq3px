@@ -6,7 +6,8 @@ Four sensors are attached to a stand at various positions, which measure the amb
 
 The installation is continuous in a slight movement – like blades of grass in the wind.
 
-Show [Video](https://vimeo.com/221154829) @ Vimeo.
+- Show video [@Vimeo](https://vimeo.com/221154829)
+- Article [@Digital Brainstorming](https://blog-de.digitalbrainstorming.ch/2018/02/07/singende-kaffeekannen-tanzendes-heu/)
 
 ![capture](https://github.com/herdav/sq3px/blob/master/sq3px@lab30.jpg)
 
