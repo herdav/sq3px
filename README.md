@@ -13,8 +13,10 @@ Show [Video](https://vimeo.com/221154829) @ Vimeo.
 ---
 
 
-### graphic
+### Graphic
+
 ![capture](https://github.com/herdav/sq3px/blob/master/sq3px_graphic.jpg) 
 
-### visualized control system
+### Visualized control system
+
 ![capture](https://github.com/herdav/sq3px/blob/master/sq3px_data.jpg)
