@@ -8,8 +8,7 @@ The installation is continuous in a slight movement – like blades of grass in 
 
 - [@Vimeo](https://vimeo.com/221154829)
 - [@Digital Brainstorming](https://blog-de.digitalbrainstorming.ch/2018/02/07/singende-kaffeekannen-tanzendes-heu/)
-- [@Lab.30](http://www.lab30.de/programm-2017/sq3px)
-- [@Network-of-Arts](https://networkofarts.com/public/artwork/286/782)
+- [@Lab.30](https://www.lab30.de/programm-2017/sq3px)
 
 ### Exhibition view
 
